@@ -152,6 +152,26 @@ public bool OrderSent { get; set; } = false;
 <Label Text="{localization:TranslateBinding OrderSent, TranslateTrue=Yes, TranslateFalse=No}" />
 ```
 
+*Handle null values in XAML*
+
+`TargetNullValue` : (optional) string resource used for when the binding value is null, e.g. "User name missing!"
+
+```csharp
+public string? UserName { get; set; } = null;
+```
+
+```xaml
+<!-- UserNameMissing string resource: "User name missing!" -->
+<Label Text="{localization:TranslateBinding UserName, TargetNullValue=UserNameMissing}" />
+```
+*Fallback value in XAML*
+
+`FallbackValue` : (optional) string resource used for when the binding value is not found, e.g. "Value not found!"
+```xaml
+<!-- NotExistingValue string resource: "Value not found!" -->
+<Label Text="{localization:TranslateBinding NotExistingValue, FallbackValue=NotExistingValue}" />
+```
+
 ## Use in Code
 When used to handle localized texts in code behind or ViewModel, use the `LocalizedString` class:
 - Add LocalizedString to code behind or ViewModel to track culture changes

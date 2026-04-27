@@ -22,17 +22,16 @@
 		<Title>LocalizationResourceManager.Maui</Title>
 		<Authors>Johan Svensson, Charlin Agramonte, Brandon Minnick, Maksym Koshovyi</Authors>
 		<Description>Enhanced .NET MAUI version of the Xamarin Community Toolkit LocalizationResourceManager.</Description>
-		<Copyright>© 2025 Johan Svensson All Rights Reserved</Copyright>
+		<Copyright>© 2026 Johan Svensson All Rights Reserved</Copyright>
 		<PackageProjectUrl>https://github.com/SirJohnK/LocalizationResourceManager.Maui</PackageProjectUrl>
 		<PackageIcon>sirjohnk.png</PackageIcon>
 		<RepositoryUrl>https://github.com/SirJohnK/LocalizationResourceManager.Maui</RepositoryUrl>
 		<PackageTags>dotnet,dotnetmaui,localization</PackageTags>
 		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-		<AssemblyVersion>1.2.2.0</AssemblyVersion>
-		<FileVersion>1.2.2.0</FileVersion>
-		<PackageReleaseNotes>- Fix FileNotFoundException issue.
-- Upgrade to .NET 9.</PackageReleaseNotes>
-		<Version>1.2.2</Version>
+		<AssemblyVersion>1.2.3.0</AssemblyVersion>
+		<FileVersion>1.2.3.0</FileVersion>
+		<PackageReleaseNotes>- Add FallbackValue and TargetNullValue to TranslateBinding Extension.</PackageReleaseNotes>
+		<Version>1.2.3</Version>
 	</PropertyGroup>
 
   <ItemGroup>

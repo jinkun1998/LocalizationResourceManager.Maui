@@ -25,23 +25,68 @@ public class TranslateBindingExtension : IMarkupExtension<BindingBase>, IMultiVa
     /// <inheritdoc/>
     public object? Source { get; set; } = null;
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Flag whether to translate the binding value directly.
+    /// If <see langword="true"/>, the value will be used as a key to look up the translation.
+    /// If <see langword="false"/>, the value will be returned as is unless other translation properties are set.
+    /// </summary>
     public bool TranslateValue { get; set; } = false;
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Format string similar to StringFormat, but the format comes from a localized string resource.
+    /// Binding value will be used as the argument, e.g. "Clicked {0} times"
+    /// </summary>
     public string? TranslateFormat { get; set; }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Format string similar to StringFormat, but used for when the binding value is one (1).
+    /// Binding value will be used as the argument, e.g. "Clicked {0} time"
+    /// </summary>
     public string? TranslateOne { get; set; }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Format string similar to StringFormat, but used for when the binding value is zero (0).
+    /// Binding value will be used as the argument, e.g. "Click Me"
+    /// </summary>
     public string? TranslateZero { get; set; }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Localized string resource used for when the binding value is evaluated to <see langword="true"/>.
+    /// e.g. "Yes", "On", "Activated"
+    /// </summary>
     public string? TranslateTrue { get; set; }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Localized string resource used for when the binding value is evaluated to <see langword="false"/>.
+    /// e.g. "No", "Off", "Deactivated"
+    /// </summary>
     public string? TranslateFalse { get; set; }
+
+    /// <summary>
+    /// Localized string resource used when the binding value is <see langword="null"/> during data binding.
+    /// e.g. "User name missing!"
+    /// </summary>
+    public string? TargetNullValue { get; set; }
+
+    /// <summary>
+    /// Localized string resource used when the binding value is not found.
+    /// e.g. "Value not found!"
+    /// </summary>
+    public string? FallbackValue { get; set; }
+
+    /// <summary>
+    /// Specifies the strategy to use when converting a value that may not be directly convertible.
+    /// </summary>
+    /// <remarks>
+    /// Used to indicate how conversion operations should handle cases where the input value cannot be converted as expected.
+    /// The options allow for returning a default value, a null value, or a specified fallback value, depending on the desired behavior.
+    /// </remarks>
+    private enum ConvertValue
+    {
+        DefaultValue = 0,
+        NullValue = 1,
+        FallbackValue = 2,
+    }
 
     /// <inheritdoc/>
     public object ProvideValue(IServiceProvider serviceProvider)
@@ -58,7 +103,11 @@ public class TranslateBindingExtension : IMarkupExtension<BindingBase>, IMultiVa
             Mode = Mode,
             Bindings = new Collection<BindingBase>
             {
-                new Binding(Path, Mode, Converter, ConverterParameter, source: Source),
+                new Binding(Path, Mode, Converter, ConverterParameter, source: Source)
+                {
+                    FallbackValue = FallbackValue is null ? null : ConvertValue.FallbackValue,
+                    TargetNullValue = TargetNullValue is null ? null : ConvertValue.NullValue,
+                },
                 new Binding(nameof(LocalizationResourceManager.CurrentCulture), BindingMode.OneWay, source:LocalizationResourceManager.Current)
             }
         };
@@ -70,6 +119,16 @@ public class TranslateBindingExtension : IMarkupExtension<BindingBase>, IMultiVa
         if (value is null)
         {
             return string.Empty;
+        }
+
+        if (value is ConvertValue.FallbackValue)
+        {
+            return LocalizationResourceManager.Current[FallbackValue!];
+        }
+
+        if (value is ConvertValue.NullValue)
+        {
+            return LocalizationResourceManager.Current[TargetNullValue!];
         }
 
         if (!string.IsNullOrWhiteSpace(TranslateZero) && IsZero(value))
