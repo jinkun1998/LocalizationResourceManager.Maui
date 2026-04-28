@@ -28,10 +28,10 @@
 		<RepositoryUrl>https://github.com/SirJohnK/LocalizationResourceManager.Maui</RepositoryUrl>
 		<PackageTags>dotnet,dotnetmaui,localization</PackageTags>
 		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-		<AssemblyVersion>1.2.3.0</AssemblyVersion>
-		<FileVersion>1.2.3.0</FileVersion>
-		<PackageReleaseNotes>- Add FallbackValue and TargetNullValue to TranslateBinding Extension.</PackageReleaseNotes>
-		<Version>1.2.3</Version>
+		<AssemblyVersion>1.2.4.0</AssemblyVersion>
+		<FileVersion>1.2.4.0</FileVersion>
+		<PackageReleaseNotes>- Ensure TargetNullValue is used for failed binding without FallbackValue in TranslateBinding Extension.</PackageReleaseNotes>
+		<Version>1.2.4</Version>
 	</PropertyGroup>
 
   <ItemGroup>

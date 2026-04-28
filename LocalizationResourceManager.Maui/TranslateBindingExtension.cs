@@ -118,7 +118,7 @@ public class TranslateBindingExtension : IMarkupExtension<BindingBase>, IMultiVa
         var value = values?.FirstOrDefault();
         if (value is null)
         {
-            return string.Empty;
+            return TargetNullValue is null ? string.Empty : LocalizationResourceManager.Current[TargetNullValue!];
         }
 
         if (value is ConvertValue.FallbackValue)
