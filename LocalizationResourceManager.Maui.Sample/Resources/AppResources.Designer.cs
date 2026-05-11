@@ -19,7 +19,7 @@ namespace LocalizationResourceManager.Maui.Sample.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class AppResources {
@@ -97,6 +97,24 @@ namespace LocalizationResourceManager.Maui.Sample.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ▲ {0} above zero.
+        /// </summary>
+        internal static string CountAbove {
+            get {
+                return ResourceManager.GetString("CountAbove", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ▼ {0} below zero.
+        /// </summary>
+        internal static string CountBelow {
+            get {
+                return ResourceManager.GetString("CountBelow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Counts the number of times you click.
         /// </summary>
         internal static string CounterBtnHint {
@@ -124,11 +142,29 @@ namespace LocalizationResourceManager.Maui.Sample.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to (no user signed in).
+        /// </summary>
+        internal static string NoUser {
+            get {
+                return ResourceManager.GetString("NoUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Toggle language.
         /// </summary>
         internal static string ToggleLanguage {
             get {
                 return ResourceManager.GetString("ToggleLanguage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Value missing!.
+        /// </summary>
+        internal static string ValueMissing {
+            get {
+                return ResourceManager.GetString("ValueMissing", resourceCulture);
             }
         }
         

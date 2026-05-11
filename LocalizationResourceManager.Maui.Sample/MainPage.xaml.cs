@@ -3,9 +3,14 @@ using System.Globalization;
 
 namespace LocalizationResourceManager.Maui.Sample
 {
+    public record FoundProfile(string Name);
+    public record MissingProfile();
+
     public partial class MainPage : ContentPage
     {
         private int count = 0;
+        private string? userName;
+        private object profile = new MissingProfile();
         private readonly ILocalizationResourceManager resourceManager;
 
         public int Count
@@ -18,8 +23,29 @@ namespace LocalizationResourceManager.Maui.Sample
             }
         }
 
+        public string? UserName
+        {
+            get => userName;
+            set
+            {
+                userName = value;
+                OnPropertyChanged(nameof(UserName));
+            }
+        }
+
+        public object Profile
+        {
+            get => profile;
+            set
+            {
+                profile = value;
+                OnPropertyChanged(nameof(Profile));
+            }
+        }
+
         public LocalizedString HelloWorld { get; }
         public LocalizedString CurrentCulture { get; }
+        public LocalizedString ToggleBinding { get; }
 
         public MainPage(ILocalizationResourceManager resourceManager)
         {
@@ -28,11 +54,21 @@ namespace LocalizationResourceManager.Maui.Sample
 
             HelloWorld = new(() => $"{resourceManager["Hello"]}, {resourceManager["World"]}!");
             CurrentCulture = new(() => resourceManager.CurrentCulture.NativeName);
+            ToggleBinding = new(() => $"{resourceManager["Toggle"]} Binding");
 
             BindingContext = this;
         }
 
         private void OnCounterClicked(object sender, EventArgs e) => Count++;
+
+        private void OnDecrement(object sender, EventArgs e) => Count--;
+
+        private void OnIncrement(object sender, EventArgs e) => Count++;
+
+        private void OnToggleUser(object sender, EventArgs e) => UserName = UserName is null ? "Ada" : null;
+
+        private void OnToggleFallback(object sender, EventArgs e) =>
+            Profile = Profile is MissingProfile ? new FoundProfile("Bound!") : new MissingProfile();
 
         private void OnToggleLanguage(object sender, EventArgs e)
         {

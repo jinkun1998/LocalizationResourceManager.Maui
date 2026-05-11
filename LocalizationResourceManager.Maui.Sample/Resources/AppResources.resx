@@ -138,13 +138,34 @@
   <data name="Home" xml:space="preserve">
     <value>Home</value>
   </data>
+  <data name="Toggle" xml:space="preserve">
+    <value>Toggle</value>
+  </data>
   <data name="ToggleLanguage" xml:space="preserve">
     <value>Toggle language</value>
+  </data>
+  <data name="ToggleUser" xml:space="preserve">
+    <value>Toggle user</value>
   </data>
   <data name="WelcomeToMAUI" xml:space="preserve">
     <value>Welcome to dot net Multi platform App U I</value>
   </data>
   <data name="World" xml:space="preserve">
     <value>World</value>
+  </data>
+  <data name="CountAbove" xml:space="preserve">
+    <value>▲ {0} above zero</value>
+  </data>
+  <data name="CountBelow" xml:space="preserve">
+    <value>▼ {0} below zero</value>
+  </data>
+  <data name="CountZero" xml:space="preserve">
+    <value>▲▼ {0} is zero</value>
+  </data>
+  <data name="NoUser" xml:space="preserve">
+    <value>(no user signed in)</value>
+  </data>
+  <data name="ValueMissing" xml:space="preserve">
+    <value>Value missing!</value>
   </data>
 </root>

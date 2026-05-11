@@ -51,6 +51,18 @@ public class TranslateBindingExtension : IMarkupExtension<BindingBase>, IMultiVa
     public string? TranslateZero { get; set; }
 
     /// <summary>
+    /// Format string similar to StringFormat, but used for when the binding value is negative.
+    /// Binding value will be used as the argument, e.g. "▼ {0} below"
+    /// </summary>
+    public string? TranslateNegative { get; set; }
+
+    /// <summary>
+    /// Format string similar to StringFormat, but used for when the binding value is positive.
+    /// Binding value will be used as the argument, e.g. "▲ {0} above"
+    /// </summary>
+    public string? TranslatePositive { get; set; }
+
+    /// <summary>
     /// Localized string resource used for when the binding value is evaluated to <see langword="true"/>.
     /// e.g. "Yes", "On", "Activated"
     /// </summary>
@@ -63,16 +75,26 @@ public class TranslateBindingExtension : IMarkupExtension<BindingBase>, IMultiVa
     public string? TranslateFalse { get; set; }
 
     /// <summary>
+    /// Default value used when the binding value is <see langword="null"/> during data binding.
+    /// </summary>
+    public object? TargetNullValue { get; set; }
+
+    /// <summary>
+    /// Default value used when the binding value is not found.
+    /// </summary>
+    public object? FallbackValue { get; set; }
+
+    /// <summary>
     /// Localized string resource used when the binding value is <see langword="null"/> during data binding.
     /// e.g. "User name missing!"
     /// </summary>
-    public string? TargetNullValue { get; set; }
+    public string? TargetNullText { get; set; }
 
     /// <summary>
     /// Localized string resource used when the binding value is not found.
     /// e.g. "Value not found!"
     /// </summary>
-    public string? FallbackValue { get; set; }
+    public string? FallbackText { get; set; }
 
     /// <summary>
     /// Specifies the strategy to use when converting a value that may not be directly convertible.
@@ -81,11 +103,14 @@ public class TranslateBindingExtension : IMarkupExtension<BindingBase>, IMultiVa
     /// Used to indicate how conversion operations should handle cases where the input value cannot be converted as expected.
     /// The options allow for returning a default value, a null value, or a specified fallback value, depending on the desired behavior.
     /// </remarks>
+    [Flags]
     private enum ConvertValue
     {
         DefaultValue = 0,
         NullValue = 1,
         FallbackValue = 2,
+        NullText = 4,
+        FallbackText = 8
     }
 
     /// <inheritdoc/>
@@ -96,6 +121,24 @@ public class TranslateBindingExtension : IMarkupExtension<BindingBase>, IMultiVa
 
     BindingBase IMarkupExtension<BindingBase>.ProvideValue(IServiceProvider serviceProvider)
     {
+        //Check FallbackValue and FallbackText to determine the FallbackValue binding value to return in the converter bindings
+        ConvertValue? fallbackValue = (FallbackValue is not null, FallbackText is not null) switch
+        {
+            (true, true) => ConvertValue.FallbackValue | ConvertValue.FallbackText,
+            (true, false) => ConvertValue.FallbackValue,
+            (false, true) => ConvertValue.FallbackText,
+            (false, false) => null
+        };
+
+        //Check TargetNullValue and TargetNullText to determine the TargetNullValue binding value to return in the converter bindings
+        ConvertValue? targetNullValue = (TargetNullValue is not null, TargetNullText is not null) switch
+        {
+            (true, true) => ConvertValue.NullValue | ConvertValue.NullText,
+            (true, false) => ConvertValue.NullValue,
+            (false, true) => ConvertValue.NullText,
+            (false, false) => null
+        };
+
         return new MultiBinding()
         {
             StringFormat = StringFormat,
@@ -105,8 +148,8 @@ public class TranslateBindingExtension : IMarkupExtension<BindingBase>, IMultiVa
             {
                 new Binding(Path, Mode, Converter, ConverterParameter, source: Source)
                 {
-                    FallbackValue = FallbackValue is null ? null : ConvertValue.FallbackValue,
-                    TargetNullValue = TargetNullValue is null ? null : ConvertValue.NullValue,
+                    FallbackValue = fallbackValue,
+                    TargetNullValue = targetNullValue,
                 },
                 new Binding(nameof(LocalizationResourceManager.CurrentCulture), BindingMode.OneWay, source:LocalizationResourceManager.Current)
             }
@@ -115,62 +158,77 @@ public class TranslateBindingExtension : IMarkupExtension<BindingBase>, IMultiVa
 
     public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
     {
-        var value = values?.FirstOrDefault();
+        //Init
+        var value = values is { Length: > 0 } ? values[0] : null;
+        var resourceManager = LocalizationResourceManager.Current;
+
         if (value is null)
+            return TargetNullText is null ? string.Empty : resourceManager[TargetNullText];
+
+        if (value is ConvertValue convertValue)
         {
-            return TargetNullValue is null ? string.Empty : LocalizationResourceManager.Current[TargetNullValue!];
+            if ((convertValue & ConvertValue.NullText) != 0)
+            {
+                return (convertValue & ConvertValue.NullValue) != 0 ?
+                    resourceManager[TargetNullText!, TargetNullValue!] :
+                    resourceManager[TargetNullText!];
+            }
+
+            if ((convertValue & ConvertValue.NullValue) != 0)
+            {
+                value = TargetNullValue!;
+            }
+            else if ((convertValue & ConvertValue.FallbackText) != 0)
+            {
+                return (convertValue & ConvertValue.FallbackValue) != 0 ?
+                    resourceManager[FallbackText!, FallbackValue!] :
+                    resourceManager[FallbackText!];
+            }
+            else if ((convertValue & ConvertValue.FallbackValue) != 0)
+            {
+                value = FallbackValue!;
+            }
         }
 
-        if (value is ConvertValue.FallbackValue)
-        {
-            return LocalizationResourceManager.Current[FallbackValue!];
-        }
+        var numInfo = GetNumericInfo(value);
+        if (!string.IsNullOrWhiteSpace(TranslateZero) && numInfo.IsZero)
+            return resourceManager[TranslateZero, value];
 
-        if (value is ConvertValue.NullValue)
-        {
-            return LocalizationResourceManager.Current[TargetNullValue!];
-        }
+        if (!string.IsNullOrWhiteSpace(TranslateOne) && numInfo.IsOne)
+            return resourceManager[TranslateOne, value];
 
-        if (!string.IsNullOrWhiteSpace(TranslateZero) && IsZero(value))
-        {
-            return LocalizationResourceManager.Current[TranslateZero, value];
-        }
+        if (!string.IsNullOrWhiteSpace(TranslateNegative) && numInfo.IsNegative)
+            return resourceManager[TranslateNegative, value];
 
-        if (!string.IsNullOrWhiteSpace(TranslateOne) && IsOne(value))
-        {
-            return LocalizationResourceManager.Current[TranslateOne, value];
-        }
+        if (!string.IsNullOrWhiteSpace(TranslatePositive) && numInfo.IsPositive)
+            return resourceManager[TranslatePositive, value];
 
-        if (!string.IsNullOrWhiteSpace(TranslateTrue) && IsTrue(value))
-        {
-            return LocalizationResourceManager.Current[TranslateTrue];
-        }
+        if (!string.IsNullOrWhiteSpace(TranslateTrue) && value is true)
+            return resourceManager[TranslateTrue];
 
-        if (!string.IsNullOrWhiteSpace(TranslateFalse) && IsFalse(value))
-        {
-            return LocalizationResourceManager.Current[TranslateFalse];
-        }
+        if (!string.IsNullOrWhiteSpace(TranslateFalse) && value is false)
+            return resourceManager[TranslateFalse];
 
         if (!string.IsNullOrWhiteSpace(TranslateFormat))
-        {
-            return LocalizationResourceManager.Current[TranslateFormat, value];
-        }
+            return resourceManager[TranslateFormat, value];
 
         if (TranslateValue)
-        {
-            return LocalizationResourceManager.Current[$"{value}"];
-        }
+            return resourceManager[value.ToString() ?? string.Empty];
 
         return value;
     }
 
-    private static bool IsZero(object value) => (value is int number && number == 0);
-
-    private static bool IsOne(object value) => (value is int number && number == 1);
-
-    private static bool IsTrue(object value) => (value is bool flag && flag);
-
-    private static bool IsFalse(object value) => (value is bool flag && !flag);
+    private static (bool IsZero, bool IsOne, bool IsNegative, bool IsPositive) GetNumericInfo(object obj) => obj switch
+    {
+        int i => (i == 0, i == 1, i < 0, i > 0),
+        double d => (d == 0.0, d == 1.0, d < 0, d > 0),
+        decimal dec => (dec == 0m, dec == 1m, dec < 0, dec > 0),
+        float f => (f == 0f, f == 1f, f < 0, f > 0),
+        long l => (l == 0, l == 1, l < 0, l > 0),
+        sbyte sb => (sb == 0, sb == 1, sb < 0, sb > 0),
+        short s => (s == 0, s == 1, s < 0, s > 0),
+        _ => default // Returns (false, false, false, false) for non-numbers
+    };
 
     public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
     {

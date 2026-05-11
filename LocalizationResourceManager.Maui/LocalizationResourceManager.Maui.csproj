@@ -28,10 +28,12 @@
 		<RepositoryUrl>https://github.com/SirJohnK/LocalizationResourceManager.Maui</RepositoryUrl>
 		<PackageTags>dotnet,dotnetmaui,localization</PackageTags>
 		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-		<AssemblyVersion>1.2.4.0</AssemblyVersion>
-		<FileVersion>1.2.4.0</FileVersion>
-		<PackageReleaseNotes>- Ensure TargetNullValue is used for failed binding without FallbackValue in TranslateBinding Extension.</PackageReleaseNotes>
-		<Version>1.2.4</Version>
+		<AssemblyVersion>1.2.5.0</AssemblyVersion>
+		<FileVersion>1.2.5.0</FileVersion>
+		<PackageReleaseNotes>- Add TranslatePositive and TranslateNegative format strings to TranslateBinding Extension for branching on numeric sign.
+- Split FallbackValue and TargetNullValue (raw object) from new FallbackText and TargetNullText (localized resource keys) in TranslateBinding Extension; both can be combined so the text becomes the resource key and the value a format argument.
+- Broaden numeric handling in TranslateBinding Extension so TranslateZero and TranslateOne match double, decimal, float, long, sbyte, and short in addition to int.</PackageReleaseNotes>
+		<Version>1.2.5</Version>
 	</PropertyGroup>
 
   <ItemGroup>

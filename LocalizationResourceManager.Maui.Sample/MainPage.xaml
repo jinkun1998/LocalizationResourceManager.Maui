@@ -30,12 +30,25 @@
                 SemanticProperties.HeadingLevel="Level2"
                 Text="{localization:Translate WelcomeToMAUI}" />
 
-            <Button
-                x:Name="CounterBtn"
-                Clicked="OnCounterClicked"
-                HorizontalOptions="Center"
-                SemanticProperties.Hint="{localization:Translate CounterBtnHint}"
-                Text="{localization:TranslateBinding Count, TranslateFormat=ClickedManyTimes, TranslateOne=ClickedOneTime, TranslateZero=ClickMe}" />
+            <HorizontalStackLayout HorizontalOptions="Center" Spacing="10">
+                <Button
+                    Clicked="OnDecrement"
+                    Text="−"
+                    WidthRequest="50" />
+                <Button
+                    x:Name="CounterBtn"
+                    Clicked="OnCounterClicked"
+                    SemanticProperties.Hint="{localization:Translate CounterBtnHint}"
+                    Text="{localization:TranslateBinding Count,
+                                                         TranslateFormat=ClickedManyTimes,
+                                                         TranslateOne=ClickedOneTime,
+                                                         TranslateZero=ClickMe}" />
+                <Button
+                    Clicked="OnIncrement"
+                    Text="+"
+                    WidthRequest="50" />
+            </HorizontalStackLayout>
+            <Label HorizontalOptions="Center" Text="{localization:TranslateBinding Count, TranslateZero=CountZero, TranslatePositive=CountAbove, TranslateNegative=CountBelow}" />
 
             <Label
                 FontSize="Small"
@@ -47,6 +60,75 @@
                 Clicked="OnToggleLanguage"
                 HorizontalOptions="Center"
                 Text="{localization:Translate ToggleLanguage}" />
+
+            <BoxView
+                HeightRequest="1"
+                HorizontalOptions="Fill"
+                Color="Gray" />
+
+            <Grid
+                ColumnDefinitions="Auto,*,Auto,*"
+                ColumnSpacing="20"
+                HorizontalOptions="Center"
+                RowDefinitions="Auto,Auto,Auto"
+                RowSpacing="2">
+                <Label
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    FontAttributes="Bold"
+                    Text="TargetNullText" />
+                <Label
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Text="{localization:TranslateBinding UserName,
+                                                         TargetNullText=NoUser}" />
+                <Label
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    FontAttributes="Bold"
+                    Text="TargetNullValue" />
+                <Label
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Text="{localization:TranslateBinding UserName,
+                                                         TargetNullValue='—'}" />
+                <Button
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    Clicked="OnToggleUser"
+                    HorizontalOptions="Fill"
+                    Text="{localization:Translate ToggleUser}" />
+                <Label
+                    Grid.Row="0"
+                    Grid.Column="2"
+                    FontAttributes="Bold"
+                    Text="FallbackText" />
+                <Label
+                    Grid.Row="0"
+                    Grid.Column="3"
+                    BindingContext="{Binding Profile}"
+                    Text="{localization:TranslateBinding Name,
+                                                         FallbackText=ValueMissing}" />
+                <Label
+                    Grid.Row="1"
+                    Grid.Column="2"
+                    FontAttributes="Bold"
+                    Text="FallbackValue" />
+                <Label
+                    Grid.Row="1"
+                    Grid.Column="3"
+                    BindingContext="{Binding Profile}"
+                    Text="{localization:TranslateBinding Name,
+                                                         FallbackValue='n/a'}" />
+                <Button
+                    Grid.Row="2"
+                    Grid.Column="2"
+                    Grid.ColumnSpan="2"
+                    Clicked="OnToggleFallback"
+                    HorizontalOptions="Fill"
+                    Text="{Binding ToggleBinding.Localized}" />
+            </Grid>
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>
