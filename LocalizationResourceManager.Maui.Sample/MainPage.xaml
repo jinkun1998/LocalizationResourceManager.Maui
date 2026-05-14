@@ -67,10 +67,10 @@
                 Color="Gray" />
 
             <Grid
-                ColumnDefinitions="Auto,*,Auto,*"
+                ColumnDefinitions="Auto,*"
                 ColumnSpacing="20"
                 HorizontalOptions="Center"
-                RowDefinitions="Auto,Auto,Auto"
+                RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
                 RowSpacing="2">
                 <Label
                     Grid.Row="0"
@@ -96,34 +96,35 @@
                     Grid.Row="2"
                     Grid.Column="0"
                     Grid.ColumnSpan="2"
+                    Margin="0,0,0,10"
                     Clicked="OnToggleUser"
                     HorizontalOptions="Fill"
                     Text="{localization:Translate ToggleUser}" />
                 <Label
-                    Grid.Row="0"
-                    Grid.Column="2"
+                    Grid.Row="3"
+                    Grid.Column="0"
                     FontAttributes="Bold"
                     Text="FallbackText" />
                 <Label
-                    Grid.Row="0"
-                    Grid.Column="3"
+                    Grid.Row="3"
+                    Grid.Column="1"
                     BindingContext="{Binding Profile}"
                     Text="{localization:TranslateBinding Name,
                                                          FallbackText=ValueMissing}" />
                 <Label
-                    Grid.Row="1"
-                    Grid.Column="2"
+                    Grid.Row="4"
+                    Grid.Column="0"
                     FontAttributes="Bold"
                     Text="FallbackValue" />
                 <Label
-                    Grid.Row="1"
-                    Grid.Column="3"
+                    Grid.Row="4"
+                    Grid.Column="1"
                     BindingContext="{Binding Profile}"
                     Text="{localization:TranslateBinding Name,
                                                          FallbackValue='n/a'}" />
                 <Button
-                    Grid.Row="2"
-                    Grid.Column="2"
+                    Grid.Row="5"
+                    Grid.Column="0"
                     Grid.ColumnSpan="2"
                     Clicked="OnToggleFallback"
                     HorizontalOptions="Fill"

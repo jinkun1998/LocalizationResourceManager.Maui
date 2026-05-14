@@ -9,7 +9,7 @@
 		<SingleProject>true</SingleProject>
 		<ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>latest</LangVersion>
-    <MauiVersion>9.0.0</MauiVersion>
+    <MauiVersion>10.0.0</MauiVersion>
 
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">14.2</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">14.0</SupportedOSPlatformVersion>
@@ -28,12 +28,10 @@
 		<RepositoryUrl>https://github.com/SirJohnK/LocalizationResourceManager.Maui</RepositoryUrl>
 		<PackageTags>dotnet,dotnetmaui,localization</PackageTags>
 		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-		<AssemblyVersion>1.2.5.0</AssemblyVersion>
-		<FileVersion>1.2.5.0</FileVersion>
-		<PackageReleaseNotes>- Add TranslatePositive and TranslateNegative format strings to TranslateBinding Extension for branching on numeric sign.
-- Split FallbackValue and TargetNullValue (raw object) from new FallbackText and TargetNullText (localized resource keys) in TranslateBinding Extension; both can be combined so the text becomes the resource key and the value a format argument.
-- Broaden numeric handling in TranslateBinding Extension so TranslateZero and TranslateOne match double, decimal, float, long, sbyte, and short in addition to int.</PackageReleaseNotes>
-		<Version>1.2.5</Version>
+		<AssemblyVersion>1.2.6.0</AssemblyVersion>
+		<FileVersion>1.2.6.0</FileVersion>
+		<PackageReleaseNotes>- Upgrade to .NET 10.</PackageReleaseNotes>
+		<Version>1.2.6</Version>
 	</PropertyGroup>
 
   <ItemGroup>

@@ -95,6 +95,20 @@ The way it works is:
 `TranslateOne` : (optional) similar to StringFormat, but used for when the binding value is one (1), e.g. "Clicked {0} time"  
 `TranslateZero` : (optional) similar to StringFormat, but used for when the binding value is zero (0), e.g. "Click Me"
 
+*Translate Positive/Negative numeric sign in XAML*
+
+`TranslatePositive` : (optional) string resource used for when the binding value is positive, e.g. "{0} Above", "Increased"  
+`TranslateNegative` : (optional) string resource used for when the binding value is negative, e.g. "{0} Below", "Decreased"
+
+```csharp
+public int StockPriceChange { get; set; } = 42;
+```
+
+```xaml
+<!-- Positive/Negative/Zero string resources: "{0} Above" / "{0} Below" / "No Change" -->
+<Label Text="{localization:TranslateBinding StockPriceChange, TranslatePositive=Above, TranslateNegative=Below, TranslateZero=NoChange}" />
+```
+
 *Date/Time in XAML*
 
 ```csharp
@@ -154,7 +168,10 @@ public bool OrderSent { get; set; } = false;
 
 *Handle null values in XAML*
 
-`TargetNullValue` : (optional) string resource used for when the binding value is null, e.g. "User name missing!"
+'TargetNullText' (optional) string resource used when the binding value is null, e.g. "User name missing!"
+`TargetNullValue` : (optional) value used when the binding value is null, e.g. "John Doe"
+
+Note: If both TargetNullText and TargetNullValue are set, TargetNullText will be used and TargetNullValue will be used as parameter.
 
 ```csharp
 public string? UserName { get; set; } = null;
@@ -162,14 +179,20 @@ public string? UserName { get; set; } = null;
 
 ```xaml
 <!-- UserNameMissing string resource: "User name missing!" -->
-<Label Text="{localization:TranslateBinding UserName, TargetNullValue=UserNameMissing}" />
+<Label Text="{localization:TranslateBinding UserName, TargetNullText=UserNameMissing}" />
+<Label Text="{localization:TranslateBinding UserName, TargetNullValue='John Doe'}" />
 ```
 *Fallback value in XAML*
 
-`FallbackValue` : (optional) string resource used for when the binding value is not found, e.g. "Value not found!"
+`FallbackText` : (optional) string resource used for when the binding value is not found, e.g. "Value not found!"
+`FallbackValue` : (optional) value used for when the binding value is not found, e.g. "N/A"
+
+Note: If both FallbackText and FallbackValue are set, FallbackText will be used and FallbackValue will be used as parameter.
+
 ```xaml
 <!-- NotExistingValue string resource: "Value not found!" -->
-<Label Text="{localization:TranslateBinding NotExistingValue, FallbackValue=NotExistingValue}" />
+<Label Text="{localization:TranslateBinding NotExistingValue, FallbackText=NotExistingValue}" />
+<Label Text="{localization:TranslateBinding NotExistingValue, FallbackValue='N/A'}" />
 ```
 
 ## Use in Code
