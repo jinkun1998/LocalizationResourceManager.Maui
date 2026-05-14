@@ -168,7 +168,7 @@ public bool OrderSent { get; set; } = false;
 
 *Handle null values in XAML*
 
-'TargetNullText' (optional) string resource used when the binding value is null, e.g. "User name missing!"
+`TargetNullText` : (optional) string resource used when the binding value is null, e.g. "User name missing!"
 `TargetNullValue` : (optional) value used when the binding value is null, e.g. "John Doe"
 
 Note: If both TargetNullText and TargetNullValue are set, TargetNullText will be used and TargetNullValue will be used as parameter.
